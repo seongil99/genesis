@@ -1,0 +1,745 @@
+@import 'tailwindcss';
+
+:root {
+	font-family: 'Avenir Next', Avenir, 'Helvetica Neue', sans-serif;
+	color: #3f312d;
+	background: #fffaf4;
+	font-synthesis: none;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	min-width: 320px;
+	background: #fffaf4;
+}
+
+body {
+	margin: 0;
+	min-width: 320px;
+	min-height: 100vh;
+}
+
+button,
+input {
+	font: inherit;
+}
+
+button {
+	cursor: pointer;
+}
+
+.login-page {
+	position: relative;
+	display: grid;
+	min-height: 100vh;
+	place-items: center;
+	overflow: hidden;
+	padding: 32px 20px;
+	background:
+		radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.95), transparent 36%),
+		linear-gradient(145deg, #fff8ef 0%, #fffdf9 54%, #fff1e8 100%);
+}
+
+.login-page::before,
+.login-page::after {
+	position: absolute;
+	width: 180px;
+	height: 180px;
+	border: 1px solid rgba(230, 131, 110, 0.16);
+	border-radius: 50%;
+	content: '';
+}
+
+.login-page::before {
+	top: -80px;
+	right: 12%;
+}
+
+.login-page::after {
+	bottom: -100px;
+	left: 10%;
+	width: 260px;
+	height: 260px;
+}
+
+.login-orb {
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(2px);
+	opacity: 0.55;
+}
+
+.login-orb--one {
+	top: 18%;
+	left: 9%;
+	width: 11px;
+	height: 11px;
+	background: #ef967e;
+	box-shadow: 35px 80px 0 -2px #efc36b;
+}
+
+.login-orb--two {
+	right: 8%;
+	bottom: 21%;
+	width: 8px;
+	height: 8px;
+	background: #88b7ba;
+	box-shadow: -65px 55px 0 1px #e99dad;
+}
+
+.login-card {
+	position: relative;
+	z-index: 1;
+	width: min(100%, 485px);
+	padding: 62px 58px 42px;
+	border: 1px solid rgba(172, 115, 95, 0.15);
+	border-radius: 28px;
+	background: rgba(255, 255, 255, 0.82);
+	box-shadow: 0 30px 90px rgba(117, 73, 57, 0.13);
+	text-align: center;
+	backdrop-filter: blur(16px);
+}
+
+.gift-mark {
+	position: relative;
+	width: 84px;
+	height: 70px;
+	margin: 0 auto 26px;
+	color: #fff;
+}
+
+.gift-mark__box {
+	position: absolute;
+	right: 10px;
+	bottom: 0;
+	display: grid;
+	width: 64px;
+	height: 49px;
+	place-items: center;
+	border-radius: 5px 5px 10px 10px;
+	background: linear-gradient(145deg, #ee8c77, #df6f63);
+	box-shadow:
+		inset 27px 0 rgba(255, 255, 255, 0.12),
+		0 9px 20px rgba(213, 103, 89, 0.22);
+	font-size: 17px;
+}
+
+.gift-mark__box::before {
+	position: absolute;
+	top: -7px;
+	left: -5px;
+	width: 74px;
+	height: 14px;
+	border-radius: 5px;
+	background: #f19a82;
+	box-shadow: inset 32px 0 rgba(255, 255, 255, 0.1);
+	content: '';
+}
+
+.gift-mark__bow {
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	width: 31px;
+	height: 23px;
+	border: 7px solid #e77d6b;
+	background: #fff7ee;
+}
+
+.gift-mark__bow--left {
+	left: 14px;
+	border-radius: 20px 7px 8px 15px;
+	transform: rotate(12deg);
+}
+
+.gift-mark__bow--right {
+	right: 12px;
+	border-radius: 7px 20px 15px 8px;
+	transform: rotate(-12deg);
+}
+
+.eyebrow,
+.birthday-kicker {
+	margin: 0 0 12px;
+	color: #df7566;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+}
+
+.login-card h1 {
+	margin: 0;
+	color: #44332e;
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: clamp(2rem, 7vw, 2.7rem);
+	line-height: 1.06;
+	letter-spacing: -0.035em;
+}
+
+.login-copy {
+	margin: 16px 0 31px;
+	color: #8d7770;
+	font-size: 0.95rem;
+}
+
+.password-form {
+	text-align: left;
+}
+
+.password-form label {
+	display: block;
+	margin: 0 0 8px 4px;
+	color: #67524b;
+	font-size: 0.76rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.input-wrap {
+	position: relative;
+}
+
+.input-wrap input {
+	width: 100%;
+	height: 54px;
+	padding: 0 48px 0 17px;
+	border: 1px solid #eadbd4;
+	border-radius: 12px;
+	outline: none;
+	background: #fffcf9;
+	color: #463630;
+	transition:
+		border-color 160ms ease,
+		box-shadow 160ms ease;
+}
+
+.input-wrap input::placeholder {
+	color: #c2afa8;
+}
+
+.input-wrap input:focus {
+	border-color: #e58a78;
+	box-shadow: 0 0 0 4px rgba(229, 138, 120, 0.12);
+}
+
+.input-wrap span {
+	position: absolute;
+	top: 50%;
+	right: 18px;
+	color: #e5907c;
+	transform: translateY(-50%);
+}
+
+.password-form button,
+.wish-button {
+	display: flex;
+	width: 100%;
+	min-height: 54px;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+	margin-top: 15px;
+	border: 0;
+	border-radius: 12px;
+	background: linear-gradient(135deg, #e98170, #df6c61);
+	box-shadow: 0 12px 26px rgba(210, 98, 84, 0.24);
+	color: white;
+	font-weight: 700;
+	transition:
+		transform 160ms ease,
+		box-shadow 160ms ease;
+}
+
+.password-form button:hover,
+.wish-button:hover {
+	box-shadow: 0 15px 30px rgba(210, 98, 84, 0.31);
+	transform: translateY(-2px);
+}
+
+.password-form button:focus-visible,
+.celebration-actions button:focus-visible,
+.logout-form button:focus-visible {
+	outline: 3px solid rgba(67, 119, 123, 0.35);
+	outline-offset: 3px;
+}
+
+.form-error {
+	margin: 9px 3px 0;
+	color: #c14f45;
+	font-size: 0.78rem;
+}
+
+.login-note {
+	margin: 27px 0 0;
+	color: #ab958d;
+	font-size: 0.76rem;
+}
+
+.login-note span {
+	color: #e98877;
+}
+
+.birthday-page {
+	position: relative;
+	min-height: 100vh;
+	overflow: hidden;
+	padding: 48px 24px 26px;
+	background:
+		radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.9), transparent 28%),
+		linear-gradient(180deg, #fff7ee 0%, #fffbf7 52%, #fdf2e8 100%);
+}
+
+.birthday-page::before,
+.birthday-page::after {
+	position: absolute;
+	top: 13%;
+	width: 90px;
+	height: 118px;
+	border-radius: 52% 48% 50% 50%;
+	background: rgba(232, 130, 113, 0.13);
+	content: '';
+	transform: rotate(-12deg);
+}
+
+.birthday-page::before {
+	left: -28px;
+}
+
+.birthday-page::after {
+	top: auto;
+	right: -25px;
+	bottom: 15%;
+	background: rgba(101, 163, 166, 0.12);
+	transform: rotate(18deg);
+}
+
+.logout-form {
+	position: absolute;
+	z-index: 4;
+	top: 22px;
+	right: 26px;
+}
+
+.logout-form button {
+	padding: 9px 15px;
+	border: 1px solid rgba(103, 82, 75, 0.14);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.66);
+	color: #8b736b;
+	font-size: 0.74rem;
+	font-weight: 600;
+	backdrop-filter: blur(8px);
+}
+
+.celebration {
+	position: relative;
+	z-index: 2;
+	width: min(100%, 780px);
+	margin: 0 auto;
+	text-align: center;
+}
+
+.birthday-kicker {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+}
+
+.birthday-kicker span {
+	width: 26px;
+	height: 1px;
+	background: #e9a091;
+}
+
+.celebration h1 {
+	margin: 7px 0 14px;
+	color: #44322d;
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: clamp(3.6rem, 10vw, 6.8rem);
+	font-weight: 600;
+	line-height: 0.82;
+	letter-spacing: -0.055em;
+}
+
+.celebration h1 strong {
+	display: block;
+	color: #df7163;
+	font-style: italic;
+	font-weight: 600;
+}
+
+.birthday-message {
+	max-width: 580px;
+	margin: 25px auto 0;
+	color: #806b64;
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: clamp(1rem, 2.5vw, 1.18rem);
+	line-height: 1.7;
+}
+
+.cake-scene {
+	position: relative;
+	height: 265px;
+	margin-top: 15px;
+}
+
+.cake {
+	position: absolute;
+	bottom: 21px;
+	left: 50%;
+	width: 250px;
+	height: 165px;
+	transform: translateX(-50%);
+}
+
+.cake-body {
+	position: absolute;
+	bottom: 15px;
+	left: 20px;
+	display: flex;
+	width: 210px;
+	height: 104px;
+	align-items: center;
+	justify-content: space-around;
+	padding: 27px 18px 0;
+	border-radius: 5px 5px 24px 24px;
+	background: linear-gradient(90deg, #ef9b80, #e88773 55%, #de796a);
+	box-shadow:
+		inset 0 -11px rgba(157, 79, 69, 0.08),
+		0 18px 28px rgba(135, 73, 59, 0.2);
+	color: rgba(255, 242, 226, 0.8);
+	font-size: 16px;
+}
+
+.cake-top {
+	position: absolute;
+	z-index: 2;
+	bottom: 97px;
+	left: 14px;
+	width: 222px;
+	height: 42px;
+	border-radius: 50%;
+	background: #fff0d7;
+	box-shadow:
+		inset 0 -8px rgba(228, 153, 124, 0.15),
+		0 4px 0 #d97969;
+}
+
+.icing-drop {
+	position: absolute;
+	top: 24px;
+	width: 20px;
+	height: 32px;
+	border-radius: 0 0 13px 13px;
+	background: #fce7cd;
+}
+
+.icing-drop--one {
+	left: 35px;
+}
+
+.icing-drop--two {
+	left: 105px;
+	height: 42px;
+}
+
+.icing-drop--three {
+	right: 31px;
+	height: 27px;
+}
+
+.cake-plate {
+	position: absolute;
+	bottom: 3px;
+	left: 0;
+	width: 250px;
+	height: 22px;
+	border-radius: 50%;
+	background: #85afb0;
+	box-shadow: 0 8px 18px rgba(74, 111, 112, 0.18);
+}
+
+.candles {
+	position: absolute;
+	z-index: 3;
+	right: 49px;
+	bottom: 132px;
+	left: 49px;
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-around;
+}
+
+.candle {
+	position: relative;
+	width: 12px;
+	height: 49px;
+	border-radius: 4px 4px 1px 1px;
+	background: repeating-linear-gradient(135deg, #f5c661 0 7px, #fff1d1 7px 13px);
+	box-shadow: inset -3px 0 rgba(127, 83, 49, 0.08);
+}
+
+.candle--two {
+	height: 60px;
+	background: repeating-linear-gradient(135deg, #71aeb1 0 7px, #e9f5ef 7px 13px);
+}
+
+.candle--three {
+	background: repeating-linear-gradient(135deg, #ed8d9c 0 7px, #ffe4e4 7px 13px);
+}
+
+.candle i {
+	position: absolute;
+	top: -25px;
+	left: -2px;
+	width: 16px;
+	height: 23px;
+	border-radius: 70% 30% 62% 38%;
+	background: #f4a43f;
+	box-shadow:
+		inset 4px 2px #ffe36f,
+		0 0 14px rgba(244, 164, 63, 0.75);
+	transform: rotate(45deg);
+	transform-origin: 50% 100%;
+	transition:
+		opacity 300ms ease,
+		transform 300ms ease;
+	animation: flicker 1.2s ease-in-out infinite alternate;
+}
+
+.candles-out .candle i {
+	opacity: 0;
+	transform: translateY(-8px) scale(0.3) rotate(45deg);
+}
+
+.spark {
+	position: absolute;
+	color: #e4a751;
+	font-size: 24px;
+	animation: sparkle 1.8s ease-in-out infinite alternate;
+}
+
+.spark--one {
+	top: 40px;
+	left: calc(50% - 165px);
+}
+
+.spark--two {
+	top: 80px;
+	right: calc(50% - 170px);
+	color: #7aa9aa;
+	animation-delay: -0.8s;
+}
+
+.celebration-actions {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+}
+
+.celebration-actions button {
+	width: auto;
+	min-width: 205px;
+	min-height: 50px;
+	margin: 0;
+	padding: 0 24px;
+	border-radius: 999px;
+}
+
+.note-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 9px;
+	border: 1px solid #e9cfc5;
+	background: rgba(255, 255, 255, 0.67);
+	color: #8b675e;
+	font-weight: 700;
+}
+
+.note-button span {
+	color: #df7768;
+}
+
+.wish-made {
+	margin: 13px 0 0;
+	color: #6e9192;
+	font-family: Georgia, 'Times New Roman', serif;
+	font-style: italic;
+}
+
+.birthday-note {
+	display: grid;
+	max-width: 580px;
+	grid-template-rows: 0fr;
+	margin: 0 auto;
+	overflow: hidden;
+	opacity: 0;
+	transition:
+		grid-template-rows 400ms ease,
+		opacity 300ms ease,
+		margin 400ms ease;
+}
+
+.birthday-note > * {
+	min-height: 0;
+}
+
+.birthday-note--open {
+	grid-template-rows: 1fr;
+	margin-top: 24px;
+	opacity: 1;
+}
+
+.birthday-note p {
+	margin: 0;
+	padding: 24px 28px 6px;
+	border-top: 1px solid rgba(223, 113, 99, 0.2);
+	color: #715e58;
+	font-family: Georgia, 'Times New Roman', serif;
+	line-height: 1.65;
+}
+
+.birthday-note span {
+	display: block;
+	padding-bottom: 16px;
+	color: #df7163;
+	font-size: 0.8rem;
+	font-weight: 700;
+}
+
+.birthday-page footer {
+	position: relative;
+	z-index: 2;
+	margin-top: 34px;
+	color: #aa9188;
+	font-size: 0.7rem;
+	letter-spacing: 0.06em;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.birthday-page footer span {
+	color: #e37769;
+}
+
+.confetti-field {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.confetti-field i {
+	position: absolute;
+	top: -20px;
+	left: var(--left);
+	width: 7px;
+	height: 13px;
+	border-radius: 2px;
+	animation: confetti-fall var(--duration) linear infinite;
+	animation-delay: var(--delay);
+	opacity: 0.62;
+}
+
+.confetti-coral {
+	background: #e77c69;
+}
+
+.confetti-gold {
+	background: #e8bd5c;
+}
+
+.confetti-pink {
+	background: #e99bab;
+}
+
+.confetti-blue {
+	background: #78aaad;
+}
+
+@keyframes flicker {
+	from {
+		transform: rotate(42deg) scale(0.94);
+	}
+	to {
+		transform: rotate(48deg) scale(1.04);
+	}
+}
+
+@keyframes sparkle {
+	from {
+		opacity: 0.35;
+		transform: scale(0.75) rotate(0);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1.12) rotate(45deg);
+	}
+}
+
+@keyframes confetti-fall {
+	to {
+		transform: translate3d(24px, 110vh, 0) rotate(540deg);
+	}
+}
+
+@media (max-width: 640px) {
+	.login-card {
+		padding: 47px 25px 34px;
+		border-radius: 22px;
+	}
+
+	.birthday-page {
+		padding: 68px 17px 24px;
+	}
+
+	.logout-form {
+		top: 16px;
+		right: 16px;
+	}
+
+	.celebration h1 {
+		font-size: clamp(3.5rem, 18vw, 5.1rem);
+	}
+
+	.birthday-message {
+		max-width: 92%;
+		font-size: 0.98rem;
+	}
+
+	.cake-scene {
+		height: 250px;
+	}
+
+	.cake {
+		transform: translateX(-50%) scale(0.9);
+		transform-origin: bottom center;
+	}
+
+	.celebration-actions {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.celebration-actions button {
+		width: min(100%, 320px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		scroll-behavior: auto !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
