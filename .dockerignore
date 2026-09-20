@@ -1,0 +1,17 @@
+.git
+.github
+node_modules
+/.svelte-kit
+/build
+/test-results
+/playwright-report
+
+# Secrets never belong in the image; the app reads them from the environment.
+.env
+.env.*
+!.env.example
+
+.DS_Store
+Dockerfile
+.dockerignore
+docker-compose.yml

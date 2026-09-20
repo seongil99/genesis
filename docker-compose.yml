@@ -1,21 +1,47 @@
-# Fronts the SvelteKit dev server with nginx, the way the site is reached in
-# development: http://localhost:8080 (and over Tailscale, see `server.allowedHosts`
-# in vite.config.ts) instead of Vite's :5173.
+# Runs the whole site in containers: the SvelteKit app behind nginx, reachable
+# on http://localhost:8080.
 #
-#   bun run dev --host 0.0.0.0 --port 5173   # in one shell
-#   docker compose up -d                     # in another
+#   docker compose up -d --build
 #
-# The app itself is not containerised: nginx proxies back out to the dev server
-# on the host, so HMR keeps working.
+# The password and signing secret come from .env (see .env.example). Without it
+# the app falls back to the dev defaults in src/lib/server/auth.ts, which anyone
+# reading the repo can guess.
 services:
+  app:
+    build: .
+    restart: unless-stopped
+    # Deliberately not published: nginx is the only way in, over the compose network.
+    expose:
+      - '3000'
+    environment:
+      # adapter-node reconstructs the request origin from these, so form POSTs
+      # pass the CSRF check whichever host nginx was reached on.
+      PROTOCOL_HEADER: x-forwarded-proto
+      HOST_HEADER: x-forwarded-host
+    env_file:
+      - path: .env
+        required: false
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'bun',
+          '-e',
+          "fetch('http://127.0.0.1:3000/').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
   nginx:
     image: nginx:1.31
     container_name: genesis-nginx
     restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
     ports:
       - '8080:80'
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-    extra_hosts:
-      # Lets `host.docker.internal` resolve on Linux too, not just Docker Desktop.
-      - 'host.docker.internal:host-gateway'

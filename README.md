@@ -1,17 +1,25 @@
 # genesis
 
-## Local nginx proxy
+## Running it
 
-`docker-compose.yml` runs an nginx container that fronts the SvelteKit dev server, so the
-site is reachable on `http://localhost:8080` (and over Tailscale) instead of Vite's `:5173`.
-The app is not containerised — nginx proxies back out to the dev server on the host, which
-keeps HMR working.
+The site runs as two containers: the SvelteKit app (adapter-node, built and served by Bun —
+see the `Dockerfile`) and an nginx reverse proxy in front of it. Only nginx is published — the app is reachable
+just over the compose network.
 
 ```bash
-bun run dev --host 0.0.0.0 --port 5173   # in one shell
-docker compose up -d                     # in another
+cp .env.example .env   # then edit it
+docker compose up -d --build
 ```
 
-The `--host` flag matters: without it Vite binds to loopback only and the container cannot
-reach it. The proxy config lives in `docker/nginx/default.conf`; edit it and
-`docker compose restart nginx` to pick it up.
+The site is then on `http://localhost:8080` (and over Tailscale, on the same port).
+
+Without a `.env` the app falls back to the dev password and signing secret hardcoded in
+`src/lib/server/auth.ts`, which anyone reading the repo can guess — set real values before
+sharing the link. Changing either value invalidates existing sessions.
+
+The proxy config lives in `docker/nginx/default.conf`; edit it and `docker compose restart
+nginx` to pick it up. After changing app code, `docker compose up -d --build` to rebuild.
+
+## Developing
+
+`bun run dev` still serves the app directly on `:5173` with HMR, without Docker.
