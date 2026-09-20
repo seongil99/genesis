@@ -1,0 +1,47 @@
+# Runs the whole site in containers: the SvelteKit app behind nginx, reachable
+# on http://localhost:8080.
+#
+#   docker compose up -d --build
+#
+# The password and signing secret come from .env (see .env.example). Without it
+# the app falls back to the dev defaults in src/lib/server/auth.ts, which anyone
+# reading the repo can guess.
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    # Deliberately not published: nginx is the only way in, over the compose network.
+    expose:
+      - '3000'
+    environment:
+      # adapter-node reconstructs the request origin from these, so form POSTs
+      # pass the CSRF check whichever host nginx was reached on.
+      PROTOCOL_HEADER: x-forwarded-proto
+      HOST_HEADER: x-forwarded-host
+    env_file:
+      - path: .env
+        required: false
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'bun',
+          '-e',
+          "fetch('http://127.0.0.1:3000/').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  nginx:
+    image: nginx:1.31
+    container_name: genesis-nginx
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - '8080:80'
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
