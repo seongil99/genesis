@@ -1,0 +1,21 @@
+# Fronts the SvelteKit dev server with nginx, the way the site is reached in
+# development: http://localhost:8080 (and over Tailscale, see `server.allowedHosts`
+# in vite.config.ts) instead of Vite's :5173.
+#
+#   bun run dev --host 0.0.0.0 --port 5173   # in one shell
+#   docker compose up -d                     # in another
+#
+# The app itself is not containerised: nginx proxies back out to the dev server
+# on the host, so HMR keeps working.
+services:
+  nginx:
+    image: nginx:1.31
+    container_name: genesis-nginx
+    restart: unless-stopped
+    ports:
+      - '8080:80'
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    extra_hosts:
+      # Lets `host.docker.internal` resolve on Linux too, not just Docker Desktop.
+      - 'host.docker.internal:host-gateway'
