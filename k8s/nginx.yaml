@@ -1,0 +1,71 @@
+# nginx in front of the app, the `nginx` service from docker-compose.yml.
+# The config is generated into a ConfigMap by kustomization.yaml.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app.kubernetes.io/name: genesis
+    app.kubernetes.io/component: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: genesis
+      app.kubernetes.io/component: nginx
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: genesis
+        app.kubernetes.io/component: nginx
+    spec:
+      # Run on the GCE VM worker (amd64, so the image must be built for linux/amd64).
+      nodeSelector:
+        kubernetes.io/hostname: gce-node
+      containers:
+        - name: nginx
+          image: nginx:1.31
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /aira/2027/
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+              readOnly: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+      volumes:
+        - name: config
+          configMap:
+            name: nginx-conf
+---
+# NodePort, like the seonyoondev service: the host nginx on gce-node (or anything
+# on the tailnet) reaches the site on <node-ip>:30002. 30001 is taken by seonyoondev.
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app.kubernetes.io/name: genesis
+    app.kubernetes.io/component: nginx
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: genesis
+    app.kubernetes.io/component: nginx
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      nodePort: 30002
