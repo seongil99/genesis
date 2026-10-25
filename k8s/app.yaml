@@ -1,0 +1,91 @@
+# The SvelteKit app (adapter-node), the `app` service from docker-compose.yml.
+# Not exposed outside the cluster: nginx is the only way in.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    app.kubernetes.io/name: genesis
+    app.kubernetes.io/component: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: genesis
+      app.kubernetes.io/component: app
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: genesis
+        app.kubernetes.io/component: app
+    spec:
+      # Run on the GCE VM worker (amd64, so the image must be built for linux/amd64).
+      nodeSelector:
+        kubernetes.io/hostname: gce-node
+      # Private GHCR image; the Secret is created by hand (see README).
+      imagePullSecrets:
+        - name: ghcr-pull
+      securityContext:
+        # The image's `bun` user is uid/gid 1000; runAsNonRoot needs it numeric.
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: app
+          # The tag is rewritten by `images:` in kustomization.yaml.
+          image: ghcr.io/seongil99/genesis
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            # adapter-node reconstructs the request origin from these, so form POSTs
+            # pass the CSRF check whichever host nginx was reached on.
+            - name: PROTOCOL_HEADER
+              value: x-forwarded-proto
+            - name: HOST_HEADER
+              value: x-forwarded-host
+          # BIRTHDAY_PASSWORD and AUTH_SECRET. Not optional on purpose: without
+          # the Secret the pod fails to start instead of silently falling back to
+          # the guessable dev defaults in src/lib/server/auth.ts.
+          envFrom:
+            - secretRef:
+                name: genesis-env
+          readinessProbe:
+            httpGet:
+              path: /aira/2027/
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /aira/2027/
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 5
+          # gce-node has about 1 GB RAM, so keep this small.
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              memory: 192Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+  labels:
+    app.kubernetes.io/name: genesis
+    app.kubernetes.io/component: app
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: genesis
+    app.kubernetes.io/component: app
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
