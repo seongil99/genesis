@@ -8,6 +8,10 @@ COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 COPY . .
+# Sub-path the app is served under (e.g. /aira/2027). It is baked into the
+# build, so it has to be passed as --build-arg; empty serves from the root.
+ARG BASE_PATH=""
+ENV BASE_PATH=$BASE_PATH
 RUN bun run build
 
 FROM oven/bun:1-alpine AS runtime

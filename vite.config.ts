@@ -16,7 +16,11 @@ export default defineConfig({
 
 			// The app is deployed as a container (see docker-compose.yml), so it runs
 			// as a standalone Node server rather than on a managed platform.
-			adapter: adapter()
+			adapter: adapter(),
+
+			// Set BASE_PATH at build time (e.g. /aira/2027) to serve the app under a
+			// sub-path, as it is on seonyoon.dev. Empty serves it from the root.
+			paths: { base: (process.env.BASE_PATH ?? '') as '' | `/${string}` }
 		})
 	],
 	server: {
